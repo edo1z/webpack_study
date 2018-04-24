@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/bootstrap.scss";
+
+$blue : #09c;
+
+body {
+  color:white;
+  background: #000;
+}
+.hello {
+  color: red;
+}
+div#hoge {
+  width: 400px;
+  background:#333;
+  color:#ff0;
+
+  a {
+    color: $blue;
+  }
+}
+
