@@ -8,7 +8,8 @@ module.exports = {
     'js/app' : './src/js/index.js',
     'js/hoge/hoge2' : './src/js/hoge/hoge2.js',
     'css/common' : './src/scss/common.scss',
-    'css/hoge/hoge': './src/scss/hoge/hoge.scss'
+    'css/hoge/hoge': './src/scss/hoge/hoge.scss',
+    'css/style': './src/css/style.css'
   },
   output: {
     filename: '[name].bundle.js',
@@ -36,7 +37,7 @@ module.exports = {
         }]
       },
       {
-        test: /\.s?[ac]ss$/,
+        test: /\.s[ac]ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -66,7 +67,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
