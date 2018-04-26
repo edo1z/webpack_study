@@ -6,7 +6,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: {
     'js/app' : './src/js/index.js',
-    'css/common' : './src/scss/common.scss'
+    'js/hoge/hoge2' : './src/js/hoge/hoge2.js',
+    'css/common' : './src/scss/common.scss',
+    'css/hoge/hoge': './src/scss/hoge/hoge.scss'
   },
   output: {
     filename: '[name].bundle.js',
@@ -31,13 +33,18 @@ module.exports = {
         exclude: /node_modules/,
         use: [{
           loader: 'babel-loader?cacheDirectory',
-        }],
+        }]
       },
       {
         test: /\.s?[ac]ss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              url: false
+            }
+          },
           {
             loader: 'postcss-loader',
             options: {
@@ -46,20 +53,39 @@ module.exports = {
               ]
             },
           },
-          'sass-loader',
+          'resolve-url-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            }
+          }
+
         ],
       },
       {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader'
+          {
+            loader: 'css-loader',
+            options: {
+              url: false
+            }
+          },
+          'resolve-url-loader'
         ]
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
-          'file-loader'
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 100 * 1024,
+              name: 'img/js/[name].[ext]'
+            }
+          }
         ]
       }
     ]
