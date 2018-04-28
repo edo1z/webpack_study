@@ -49,6 +49,7 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
+              sourceMap: true,
               plugins: [
                 require('autoprefixer')({grid: true})
               ]
