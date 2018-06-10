@@ -1,18 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
-    'js/app' : './src/js/index.js',
-    'js/hoge/hoge2' : './src/js/hoge/hoge2.js',
-    'css/common' : './src/scss/common.scss',
-    'css/hoge/hoge': './src/scss/hoge/hoge.scss',
-    'css/style': './src/css/style.css'
+    'app': './src/js/index.js'
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[chunkhash].js',
     path: path.resolve(__dirname, 'public')
   },
   optimization: {
@@ -20,13 +16,23 @@ module.exports = {
       cacheGroups: {
         vendor: {
           test: /node_modules/,
-          name: 'js/vendor',
+          name: 'vendor',
           chunks: 'initial',
           enforce: true
         }
       }
     }
   },
+  plugins: [
+    new CleanWebpackPlugin(['public']),
+    new HtmlWebpackPlugin({
+      title: 'Top Page'
+    }),
+    new webpack.HashedModuleIdsPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery'
+    })
+  ],
   module: {
     rules: [
       {
@@ -39,13 +45,8 @@ module.exports = {
       {
         test: /\.s[ac]ss$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              url: false
-            }
-          },
+          'style-loader',
+          'css-loader',
           {
             loader: 'postcss-loader',
             options: {
@@ -55,27 +56,14 @@ module.exports = {
               ]
             },
           },
-          'resolve-url-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            }
-          }
-
+          'sass-loader'
         ],
       },
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              url: false
-            }
-          },
-          'resolve-url-loader'
+          'style-loader',
+          'css-loader',
         ]
       },
       {
@@ -85,17 +73,11 @@ module.exports = {
             loader: 'url-loader',
             options: {
               limit: 100 * 1024,
-              name: 'img/js/[name].[ext]'
+              name: '[name].[hash].[ext]'
             }
           }
         ]
       }
     ]
-  },
-  plugins: [
-    new CleanWebpackPlugin(['public/css', 'public/js']),
-    new webpack.ProvidePlugin({
-      $: 'jquery'
-    })
-  ]
+  }
 };
